@@ -61,7 +61,7 @@ export default function SeatsPage(props) {
             Selecione o(s) assento(s)
             <SeatsContainer>
                 {assentos.map(assento =>
-                    <SeatItem key={assento.id} isAvailable={assento.isAvailable} isSelected={selecionados.includes(assento.id)} onClick={() => clicarAssento(assento)}>{assento.name}</SeatItem>
+                    <SeatItem data-test="seat" key={assento.id} isAvailable={assento.isAvailable} isSelected={selecionados.includes(assento.id)} onClick={() => clicarAssento(assento)}>{assento.name}</SeatItem>
                 )}
             </SeatsContainer>
 
@@ -82,15 +82,15 @@ export default function SeatsPage(props) {
 
             <FormContainer onSubmit={reservar}>
                 Nome do Comprador:
-                   <input placeholder="Digite seu nome..." required value={nome} onChange={e => setNome(e.target.value)}/>
+                   <input data-test="client-name" placeholder="Digite seu nome..." required value={nome} onChange={e => setNome(e.target.value)}/>
 
                    CPF do Comprador:
-                   <input placeholder="Digite seu CPF..." required value={cpf} onChange={e => setCpf(e.target.value)}/>
+                   <input data-test="client-cpf" placeholder="Digite seu CPF..." required value={cpf} onChange={e => setCpf(e.target.value)}/>
 
-                   <button type="submit">Reservar Assento(s)</button>
+                   <button type="submit" data-test="book-seat-btn">Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
+            <FooterContainer data-test="footer">
                 <div>
                     <img src={filme.posterURL} alt="poster" />
                 </div>
