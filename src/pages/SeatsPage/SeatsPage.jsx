@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import axios from 'axios'
 import { useState } from "react";
@@ -13,6 +13,9 @@ export default function SeatsPage() {
     const [weekday, setWeekday] = useState("");
     const [selecionados, setSelecionados] = useState([]);
     const {idSessao} = useParams();
+    const [nome, setNome] = useState("");
+    const [cpf, setCpf] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`);
@@ -39,6 +42,19 @@ export default function SeatsPage() {
         }
     }
 
+    function reservar(event) {
+        event.preventDefault();
+        const promise = axios.post("https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many", {
+            ids: selecionados,
+            name: nome,
+            cpf: cpf
+        })
+
+        promise.then(() => {
+            navigate("/sucesso");
+        });
+    }
+
     return (
         <PageContainer>
             Selecione o(s) assento(s)
@@ -63,14 +79,14 @@ export default function SeatsPage() {
                 </CaptionItem>
             </CaptionContainer>
 
-            <FormContainer>
+            <FormContainer onSubmit={reservar}>
                 Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                   <input placeholder="Digite seu nome..." required value={nome} onChange={e => setNome(e.target.value)}/>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                   CPF do Comprador:
+                   <input placeholder="Digite seu CPF..." required value={cpf} onChange={e => setCpf(e.target.value)}/>
 
-                <button>Reservar Assento(s)</button>
+                   <button type="submit">Reservar Assento(s)</button>
             </FormContainer>
 
             <FooterContainer>
@@ -109,7 +125,7 @@ const SeatsContainer = styled.div`
     justify-content: center;
     margin-top: 20px;
 `
-const FormContainer = styled.div`
+const FormContainer = styled.form`
     width: calc(100vw - 40px); 
     display: flex;
     flex-direction: column;
