@@ -21,7 +21,7 @@ export default function App() {
     return (
         <div>
            <NavContainer>
-                {page === "home" ? "" : <img data-test="go-home-header-btn" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" onClick={() => navigate(-1)}/>}
+                {page === "home" ? "" : <button onClick={() => navigate(-1)} data-test="go-home-header-btn"><img src="https://cdn-icons-png.flaticon.com/512/93/93634.png"/></button>}
                 <h1>CINEFLEX</h1>
             </NavContainer>
             <Routes>
@@ -55,5 +55,8 @@ const NavContainer = styled.div`
     }
     img {
         width: 25px;
+    }
+    button {
+        background:none;
     }
 `
