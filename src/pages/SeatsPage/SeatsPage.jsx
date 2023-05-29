@@ -4,13 +4,15 @@ import styled from "styled-components"
 import axios from 'axios'
 import { useState } from "react";
 
-export default function SeatsPage() {
 
-    const {idSessao} = useParams();
+export default function SeatsPage() {
+    
     const [filme, setFilme] = useState({});
     const [assentos, setAssentos] = useState([]);
     const [sessao, setSessao] = useState({});
     const [weekday, setWeekday] = useState("");
+    const [selecionados, setSelecionados] = useState([]);
+    const {idSessao} = useParams();
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`);
@@ -22,26 +24,41 @@ export default function SeatsPage() {
         });
     }
     ,[]);
+  
+    function clicarAssento(assento) {
+        if (!assento.isAvailable)
+            alert("Esse assento não está disponível");
+        else if(!selecionados.includes(assento.id)) {
+            const aux = [...selecionados, assento.id];
+            console.log(aux);
+            setSelecionados(aux);
+        }
+        else {
+            const aux = selecionados.filter(numero => numero != assento.id);
+            setSelecionados(aux);
+        }
+    }
+
     return (
         <PageContainer>
             Selecione o(s) assento(s)
             <SeatsContainer>
                 {assentos.map(assento =>
-                    <SeatItem key={assento.id} isAvailable={assento.isAvailable}>{assento.name}</SeatItem>
+                    <SeatItem key={assento.id} isAvailable={assento.isAvailable} isSelected={selecionados.includes(assento.id)} onClick={() => clicarAssento(assento)}>{assento.name}</SeatItem>
                 )}
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isSelected={true}/>
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isAvailable={true}/>
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isAvailable={false}/>
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -69,6 +86,7 @@ export default function SeatsPage() {
         </PageContainer>
     )
 }
+
 
 const PageContainer = styled.div`
     display: flex;
@@ -114,7 +132,8 @@ const CaptionContainer = styled.div`
 `
 const CaptionCircle = styled.div`
     border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border-color: ${props => props.isSelected ? "#0E7D71" : props.isAvailable ? "#808F9D" : "#F7C52B"};
+    background-color: ${props => props.isSelected ? "#1AAE9E" : props.isAvailable ? "#C3CFD9" : "#FBE192"};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -131,8 +150,8 @@ const CaptionItem = styled.div`
 `
 const SeatItem = styled.div`
     border: 1px solid blue;    
-    border-color: ${props => props.isAvailable ? "#808F9D" : "#F7C52B"};
-    background-color: ${props => props.isAvailable ? "#C3CFD9" : "#FBE192"};
+    border-color: ${props => props.isSelected ? "#0E7D71" : props.isAvailable ? "#808F9D" : "#F7C52B"};
+    background-color: ${props => props.isSelected ? "#1AAE9E" : props.isAvailable ? "#C3CFD9" : "#FBE192"};
     height: 25px;
     width: 25px;
     border-radius: 25px;
