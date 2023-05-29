@@ -10,6 +10,7 @@ export default function SuccessPage(props) {
     console.log(nome);
     console.log(cpf);
 
+    props.setPage("success");
     function findSeat(number) {
         const assento = sessao.seats.filter(seat => seat.id === number);
         return assento[0].name;

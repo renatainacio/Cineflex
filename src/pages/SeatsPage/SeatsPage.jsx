@@ -16,6 +16,7 @@ export default function SeatsPage(props) {
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`);
+        props.setPage("seats");
         setSelecionados([]);
         setNome("");
         setCpf("");

@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
 import axios from 'axios';
 import { useState } from "react";
 
@@ -15,17 +15,22 @@ export default function App() {
     const [selecionados, setSelecionados] = useState([]);
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
+    const [page, setPage] = useState("home");
+    const navigate = useNavigate();
 
     return (
-        <BrowserRouter>
-           <NavContainer>CINEFLEX</NavContainer>
+        <div>
+           <NavContainer>
+                {page === "home" ? "" : <img data-test="go-home-header-btn" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" onClick={() => navigate(-1)}/>}
+                <h1>CINEFLEX</h1>
+            </NavContainer>
             <Routes>
-                <Route path="/" element={<HomePage />}/>
-                <Route path="/sessoes/:idFilme" element={<SessionsPage />}/>
-                <Route path="/assentos/:idSessao" element={<SeatsPage sessao={sessao} setSessao={setSessao} selecionados={selecionados} setSelecionados={setSelecionados} nome={nome} setNome={setNome} cpf={cpf} setCpf={setCpf}/>}/>
-                <Route path="/sucesso" element={<SuccessPage sessao={sessao} selecionados={selecionados} nome={nome} cpf={cpf}/>}/>
+                <Route path="/" element={<HomePage setPage={setPage}/>}/>
+                <Route path="/sessoes/:idFilme" element={<SessionsPage setPage={setPage}/>}/>
+                <Route path="/assentos/:idSessao" element={<SeatsPage setPage={setPage} sessao={sessao} setSessao={setSessao} selecionados={selecionados} setSelecionados={setSelecionados} nome={nome} setNome={setNome} cpf={cpf} setCpf={setCpf}/>}/>
+                <Route path="/sucesso" element={<SuccessPage setPage={setPage} sessao={sessao} selecionados={selecionados} nome={nome} cpf={cpf}/>}/>
             </Routes>
-        </BrowserRouter>
+        </div>
     )
 }
 
@@ -44,5 +49,11 @@ const NavContainer = styled.div`
     a {
         text-decoration: none;
         color: #E8833A;
+    }
+    h1 {
+        margin: auto 150px;
+    }
+    img {
+        width: 25px;
     }
 `

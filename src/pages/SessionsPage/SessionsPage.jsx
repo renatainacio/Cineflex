@@ -5,13 +5,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function SessionsPage() {
+export default function SessionsPage(props) {
 
     const {idFilme} = useParams();
     const [sessoes, setSessoes] = useState([]);
     const [poster, setPoster] = useState("");
     const [filme, setFilme] = useState("");
+
     useEffect(() => {
+        props.setPage("sessions");
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`);
         promise.then(answer => {
             setSessoes(answer.data.days);
