@@ -1,17 +1,34 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
+import axios from 'axios'
+import { useState } from "react";
 
 export default function SeatsPage() {
 
+    const {idSessao} = useParams();
+    const [filme, setFilme] = useState({});
+    const [assentos, setAssentos] = useState([]);
+    const [sessao, setSessao] = useState({});
+    const [weekday, setWeekday] = useState("");
+
+    useEffect(() => {
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`);
+        promise.then(answer => {
+            setAssentos(answer.data.seats);
+            setFilme(answer.data.movie);
+            setSessao(answer.data);
+            setWeekday(answer.data.day.weekday);
+        });
+    }
+    ,[]);
     return (
         <PageContainer>
             Selecione o(s) assento(s)
-
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {assentos.map(assento =>
+                    <SeatItem key={assento.id} isAvailable={assento.isAvailable}>{assento.name}</SeatItem>
+                )}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -41,11 +58,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={filme.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{filme.title}</p>
+                    <p>{weekday} - {sessao.name}</p>
                 </div>
             </FooterContainer>
 
@@ -113,8 +130,9 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid blue;    
+    border-color: ${props => props.isAvailable ? "#808F9D" : "#F7C52B"};
+    background-color: ${props => props.isAvailable ? "#C3CFD9" : "#FBE192"};
     height: 25px;
     width: 25px;
     border-radius: 25px;
