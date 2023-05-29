@@ -1,12 +1,20 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import { Link, useParams } from "react-router-dom";
 
-export default function HomePage() {
+export default function HomePage(props) {
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                <MovieContainer>
+                {props.filmes.map(filme =>
+                        <Link to={`/sessoes/${filme.id}`}>
+                            <MovieContainer>
+                                    <img src={filme.posterURL} alt="poster"/>
+                            </MovieContainer>
+                        </Link>
+                    )}
+                {/* <MovieContainer>
                     <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
                 </MovieContainer>
 
@@ -20,7 +28,7 @@ export default function HomePage() {
 
                 <MovieContainer>
                     <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
+                </MovieContainer> */}
             </ListContainer>
 
         </PageContainer>
