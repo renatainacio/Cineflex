@@ -1,6 +1,19 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components"
 
-export default function SuccessPage() {
+export default function SuccessPage(props) {
+
+    const {sessao, selecionados, nome, cpf} = props;
+
+    console.log(sessao);
+    console.log(selecionados);
+    console.log(nome);
+    console.log(cpf);
+
+    function findSeat(number) {
+        const assento = sessao.seats.filter(seat => seat.id === number);
+        return assento[0].name;
+    }
 
     return (
         <PageContainer>
@@ -8,24 +21,27 @@ export default function SuccessPage() {
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
-                <p>03/03/2023 - 14:00</p>
+                <p>{sessao.movie.title}</p>
+                <p>{sessao.day.date} - {sessao.name}</p>
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                <p>Assento 01</p>
-                <p>Assento 02</p>
-                <p>Assento 03</p>
+                {selecionados.map(assento => 
+                    <p key={assento}>Assento {findSeat(assento)}</p>
+                
+                    )}
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Comprador</p></strong>
-                <p>Nome: Letícia Chijo</p>
-                <p>CPF: 123.456.789-10</p>
+                <p>Nome: {nome}</p>
+                <p>CPF: {cpf}</p>
             </TextContainer>
 
-            <button>Voltar para Home</button>
+            <Link to="/">
+                <button>Voltar para Home</button>
+            </Link>
         </PageContainer>
     )
 }

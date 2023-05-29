@@ -5,20 +5,21 @@ import axios from 'axios'
 import { useState } from "react";
 
 
-export default function SeatsPage() {
+export default function SeatsPage(props) {
     
     const [filme, setFilme] = useState({});
     const [assentos, setAssentos] = useState([]);
-    const [sessao, setSessao] = useState({});
     const [weekday, setWeekday] = useState("");
-    const [selecionados, setSelecionados] = useState([]);
     const {idSessao} = useParams();
-    const [nome, setNome] = useState("");
-    const [cpf, setCpf] = useState("");
     const navigate = useNavigate();
+    const {sessao, setSessao, selecionados, setSelecionados, nome, setNome, cpf, setCpf} = props;
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`);
+        setSelecionados([]);
+        setNome("");
+        setCpf("");
+        setSessao({});
         promise.then(answer => {
             setAssentos(answer.data.seats);
             setFilme(answer.data.movie);
